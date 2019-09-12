@@ -288,6 +288,7 @@ def bbknn(adata, batch_key='batch', approx=True, metric='angular', copy=False, *
 	adata.uns['neighbors']['params'] = {'n_neighbors': len(bbknn_out[0][0,:].data)+1, 'method': 'umap'}
 	adata.uns['neighbors']['distances'] = bbknn_out[0]
 	adata.uns['neighbors']['connectivities'] = bbknn_out[1]
+	adata.uns['neighbors']['indices'] = bbknn_out[2]
 	return adata if copy else None
 
 def bbknn_pca_matrix(pca, batch_list, neighbors_within_batch=3, n_pcs=50, trim=None, 
@@ -337,7 +338,7 @@ def bbknn_pca_matrix(pca, batch_list, neighbors_within_batch=3, n_pcs=50, trim=N
 	#skip trimming if set to 0, otherwise trim
 	if trim > 0:
 		cnts = trimming(cnts=cnts,trim=trim)
-	return (dist, cnts)
+	return (dist, cnts, knn_indices)
 
 def extract_cell_connectivity(adata, cell, key='extracted_cell_connectivity'):
 	'''
